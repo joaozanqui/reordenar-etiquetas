@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reordenar Etiquetas PDF por Destinatário - Farmácia Zanqui</title>
+    <meta
+      name="description"
+      content="Reordena as páginas de um PDF de etiquetas em ordem alfabética pelo destinatário, direto no navegador."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./app.css" />
+    <link rel="icon" href="./logo-zanqui.png" type="image/png" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  </head>
+  <body>
+    <div id="loadingOverlay" class="loading-overlay" aria-hidden="true">
+      <div class="loading-inner">
+        <div class="loading-spinner"></div>
+        <p>Processando etiquetas...</p>
+      </div>
+    </div>
+
+    <div id="dragOverlay" class="drag-overlay" aria-hidden="true">
+      <div class="drag-overlay-inner">
+        <span class="drag-overlay-icon">&#8675;</span>
+        <p>Solte o PDF aqui</p>
+      </div>
+    </div>
+
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-title">
+          <img
+            src="./logo-zanqui.png"
+            alt="Farmácia Zanqui"
+            class="hero-logo"
+            onerror="this.style.display='none';document.getElementById('logoFallback').style.display='grid'"
+          />
+          <div id="logoFallback" class="hero-logo-fallback">Z</div>
+          <h2>Reordenar Etiquetas PDF por Destinatário - Farmácia Zanqui</h2>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel upload-panel">
+          <div class="panel-heading">
+            <h2>Enviar etiquetas</h2>
+            <span class="panel-tag">.pdf (Etiquetas)</span>
+          </div>
+
+          <label class="upload-dropzone" for="pdfFile">
+            <input id="pdfFile" type="file" accept=".pdf,application/pdf" />
+            <span class="upload-title">Selecione ou arraste seu PDF de etiquetas</span>
+          </label>
+
+          <div class="file-summary" id="fileSummary" aria-live="polite">
+            <p class="summary-label">Nenhum arquivo selecionado</p>
+          </div>
+
+          <div class="actions">
+            <button id="btnAZ" class="primary-button" type="button" disabled>
+              Ordenar A→Z e baixar
+            </button>
+            <button id="btnZA" class="ghost-button" type="button" disabled>
+              Ordenar Z→A e baixar
+            </button>
+          </div>
+
+          <p class="status-message" id="statusMessage" aria-live="polite">
+            Selecione um PDF de etiquetas para detectar os destinatários e gerar o arquivo reordenado.
+          </p>
+        </section>
+
+      </main>
+
+      <section class="panel results-panel" id="resultsPanel" hidden>
+        <div class="panel-heading">
+          <h2>Pré-visualização da nova ordem</h2>
+          <span class="panel-tag" id="resultsTag">0 de 0 detectados</span>
+        </div>
+
+        <div id="alertaDebug" class="debug-alert" hidden>
+          Nenhuma etiqueta foi detectada. Clique em "ver texto" em uma linha para conferir o que
+          foi lido do PDF — se vier vazio, o PDF deve ser escaneado (imagem).
+        </div>
+
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Nova posição</th>
+                <th>Página original</th>
+                <th>Destinatário</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
